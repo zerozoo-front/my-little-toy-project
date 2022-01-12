@@ -5,15 +5,22 @@ const PORT: number = 3000;
 
 const app: Express = express();
 
+declare global {
+  namespace Express {
+    interface Request {
+      myProps?: any;
+      requestedAt?: Date;
+    }
+  }
+}
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log('middle ware 1');
-  setTimeout((): void => {
-    next();
-    console.log('wait 1 sec');
-  }, 1000);
+  req.myProps = 'ss';
+  next();
 });
 app.use('/', (req: Request, res: Response): void => {
-  console.log('middle ware 2');
+  console.log('middle ware 2', req.myProps);
+
   res.status(200).send('Hello! express');
 });
 
